@@ -6,6 +6,10 @@
 package app;
 
 import graph.ExampleGraph;
+import graph.W1648585_Graph;
+import graph.W1687385_Group1;
+import graph.W1690091_Graph;
+import graph.W1690566_Graph;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -71,6 +75,14 @@ public class DesktopAdminDashboard extends Application {
             border.setCenter(createLoginPane());
         } else if (action.equals("register")) {
             border.setCenter(createRegisterPane());
+        } else if (action.equals("graph-david")) {
+            border.setCenter(createDavidGraph());
+        } else if (action.equals("graph-khalood")) {
+            border.setCenter(createKhaloodGraph());
+        } else if (action.equals("graph-gayatri")) {
+           border.setCenter(createGayatriGraph());
+        } else if (action.equals("graph-atiya")) {
+            border.setCenter(createAtiyaGraph());
         }
         
         
@@ -108,17 +120,38 @@ public class DesktopAdminDashboard extends Application {
         vbox.getChildren().add(title);
 
         Hyperlink options[] = new Hyperlink[] {
-            new Hyperlink("Graph 1"),
-            new Hyperlink("Graph 2"),
-            new Hyperlink("Graph 3"),
-            new Hyperlink("Graph 4")};
+            new Hyperlink("David Graph"),
+            new Hyperlink("Khalood Graph"),
+            new Hyperlink("Gayatri Graph"),
+            new Hyperlink("Atiya Graph")};
 
+        options[0].setOnAction((ActionEvent e) -> {
+                action = "graph-david";
+                refresh();
+            });
+        
+        options[1].setOnAction((ActionEvent e) -> {
+                action = "graph-khalood";
+                refresh();
+            });
+        
+        options[2].setOnAction((ActionEvent e) -> {
+                action = "graph-gayatri";
+                refresh();
+            });
+        
+        options[3].setOnAction((ActionEvent e) -> {
+                action = "graph-atiya";
+                refresh();
+            });
         
         for (int i=0; i<4; i++) {
             VBox.setMargin(options[i], new Insets(0, 0, 0, 8));
             options[i].getStyleClass().add("blue");
             vbox.getChildren().add(options[i]);
         }
+        
+        
 
     return vbox;
 }
@@ -357,12 +390,80 @@ grid.getColumnConstraints().add(column2);
     HBox hbButtons = new HBox();
     hbButtons.setSpacing(10.0);
     
+    try {
     grid.getChildren().add(ExampleGraph.createGraph());
-
+    } catch (Exception e) {
+        grid.getChildren().add(new Label("Sorry, there was a problem creating the graph!"));
+    }
     
 
     return grid;
     }
+        
+        public GridPane createDavidGraph() {
+        GridPane grid = new GridPane();
+    grid.setHgap(10);
+    grid.setVgap(12);
+    grid.setAlignment(Pos.CENTER);
+    HBox hbButtons = new HBox();
+    hbButtons.setSpacing(10.0);
+    
+    try {
+    grid.getChildren().add(W1690566_Graph.createGraph());
+    } catch (Exception e) {
+        grid.getChildren().add(new Label("Sorry, there was a problem creating the graph!"));
+    }
+    return grid;
+    }
+        
+        public GridPane createKhaloodGraph() {
+        GridPane grid = new GridPane();
+    grid.setHgap(10);
+    grid.setVgap(12);
+    grid.setAlignment(Pos.CENTER);
+    HBox hbButtons = new HBox();
+    hbButtons.setSpacing(10.0);
+    
+    try {
+    grid.getChildren().add(W1687385_Group1.createGraph());
+    } catch (Exception e) {
+        grid.getChildren().add(new Label("Sorry, there was a problem creating the graph!"));
+    }
+    return grid;
+    }
+        
+        public GridPane createGayatriGraph() {
+        GridPane grid = new GridPane();
+    grid.setHgap(10);
+    grid.setVgap(12);
+    grid.setAlignment(Pos.CENTER);
+    HBox hbButtons = new HBox();
+    hbButtons.setSpacing(10.0);
+    
+    try {
+    grid.getChildren().add(W1648585_Graph.createGraph());
+    } catch (Exception e) {
+        grid.getChildren().add(new Label("Sorry, there was a problem creating the graph!"));
+    }
+    return grid;
+    }
+        
+                public GridPane createAtiyaGraph() {
+        GridPane grid = new GridPane();
+    grid.setHgap(10);
+    grid.setVgap(12);
+    grid.setAlignment(Pos.CENTER);
+    HBox hbButtons = new HBox();
+    hbButtons.setSpacing(10.0);
+    
+    try {
+    grid.getChildren().add(W1690091_Graph.createGraph());
+    } catch (Exception e) {
+        grid.getChildren().add(new Label("Sorry, there was a problem creating the graph!"));
+    }
+    return grid;
+    }
+                
     
     /**
      * @param args the command line arguments
