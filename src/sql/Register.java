@@ -19,16 +19,19 @@ import java.util.logging.Logger;
  */
 public class Register {
     
+    //Register user with defined params
     public static boolean register(String username, String password, String confirm) {
         
         if (!password.equals(confirm))
             return false;
         
+        //Connect to db
         DatabaseManager manager = new DatabaseManager();
         manager.connect();
         System.out.println("Connected");
             try {
                 
+                //Insert user details into db
                 String query = "INSERT INTO users VALUES (NULL, '" + username + "', '" + password + "', 'user')";
 
                 manager.connection.createStatement().execute(query);

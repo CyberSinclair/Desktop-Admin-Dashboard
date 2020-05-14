@@ -39,36 +39,39 @@ import sql.Register;
 
 
 public class DesktopAdminDashboard extends Application {
-    
+
     public static Profile profile = null;
     Stage stage = null;
     String action = "";
-    
+
+    //Main screen which is displayed on start
     @Override
     public void start(Stage primaryStage) {
-        
-        
+
+
         primaryStage.setScene(mainScene());
         primaryStage.show();
         primaryStage.setTitle("Dashboard");
         stage = primaryStage;
     }
 
-    
+    //Main scene, this draws all components on screen and handles action changes
     public Scene mainScene() {
         BorderPane border = new BorderPane();
         HBox hbox = createHBox();
         hbox.getStyleClass().add("blue-pane");
         border.setTop(hbox);
-        
+
+        //Checks if user has logged in, display new title bar, or if admin, lower bar
         if (ProfileManager.isLoggedIn()) {
             if (profile.userType.equalsIgnoreCase("administrator")) {
                 border.setBottom(createAdminPanel());
             }
             border.setLeft(createVBox());
         }
-        
-      
+
+
+        //Selector decides what to display in center screen depending on last action
         if (action.equals("home") || action.equals("")) {
             border.setCenter(createMainPane());
         } else if (action.equals("login")) {
@@ -80,405 +83,410 @@ public class DesktopAdminDashboard extends Application {
         } else if (action.equals("graph-khalood")) {
             border.setCenter(createKhaloodGraph());
         } else if (action.equals("graph-gayatri")) {
-           border.setCenter(createGayatriGraph());
+            border.setCenter(createGayatriGraph());
         } else if (action.equals("graph-atiya")) {
             border.setCenter(createAtiyaGraph());
         }
-        
-        
+
+
         border.getStyleClass().add("white-pane");
         //border.setRight(addFlowPane());
-        
+
         Scene scene = new Scene(border, 800, 600);
-        
+
         scene.getStylesheets().add("/style.css");
-        
+
+        //Set action to default blank, shows home page
         action = "";
-        
+
         return scene;
     }
-    
+
+    //Method to redraw the screen and update the display
     public void refresh() {
         stage.setScene(mainScene());
         stage.show();
     }
-    
-    
+
+    //Method which returns new Vertical Box (side menu)
     public VBox createVBox() {
         VBox vbox = new VBox();
         vbox.setPadding(new Insets(10));
         vbox.setSpacing(8);
         vbox.setMinWidth(150);
-        
-        
+
+
         vbox.getStyleClass().add("blue-pane");
 
         Text title = new Text("Graph Menu");
-        title.setFill(Color.WHITE); 
-        
+        title.setFill(Color.WHITE);
+
         title.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         vbox.getChildren().add(title);
 
+        //List of all graph buttons to display
         Hyperlink options[] = new Hyperlink[] {
             new Hyperlink("David Graph"),
-            new Hyperlink("Khalood Graph"),
-            new Hyperlink("Gayatri Graph"),
-            new Hyperlink("Atiya Graph")};
+                new Hyperlink("Khalood Graph"),
+                new Hyperlink("Gayatri Graph"),
+                new Hyperlink("Atiya Graph")
+        };
 
         options[0].setOnAction((ActionEvent e) -> {
-                action = "graph-david";
-                refresh();
-            });
-        
+            action = "graph-david";
+            refresh();
+        });
+
         options[1].setOnAction((ActionEvent e) -> {
-                action = "graph-khalood";
-                refresh();
-            });
-        
+            action = "graph-khalood";
+            refresh();
+        });
+
         options[2].setOnAction((ActionEvent e) -> {
-                action = "graph-gayatri";
-                refresh();
-            });
-        
+            action = "graph-gayatri";
+            refresh();
+        });
+
         options[3].setOnAction((ActionEvent e) -> {
-                action = "graph-atiya";
-                refresh();
-            });
-        
-        for (int i=0; i<4; i++) {
+            action = "graph-atiya";
+            refresh();
+        });
+
+        for (int i = 0; i < 4; i++) {
             VBox.setMargin(options[i], new Insets(0, 0, 0, 8));
             options[i].getStyleClass().add("blue");
             vbox.getChildren().add(options[i]);
         }
-        
-        
 
-    return vbox;
-}
-    
+
+
+        return vbox;
+    }
+
+    //Method which creates and returns admin horizontal box
     public HBox createAdminPanel() {
         HBox hbox = new HBox();
         hbox.getStyleClass().add("blue-pane");
-    hbox.setAlignment(Pos.CENTER);
-    hbox.setPadding(new Insets(15, 12, 15, 12));
-    hbox.setSpacing(10);
+        hbox.setAlignment(Pos.CENTER);
+        hbox.setPadding(new Insets(15, 12, 15, 12));
+        hbox.setSpacing(10);
 
-    Button activityBtn = new Button("Activity Log");
-    activityBtn.setPrefSize(100, 20);
-    activityBtn.getStyleClass().add("blue");
-    
-    Button dataBtn = new Button("Data Editor");
-    dataBtn.setPrefSize(100, 20);
-    dataBtn.getStyleClass().add("blue");
-            
-    Button searchBtn = new Button("Search");
-    searchBtn.setPrefSize(100, 20);
-    searchBtn.getStyleClass().add("blue");
-            
-    hbox.getChildren().addAll(activityBtn, dataBtn, searchBtn);
+        Button activityBtn = new Button("Activity Log");
+        activityBtn.setPrefSize(100, 20);
+        activityBtn.getStyleClass().add("blue");
 
-    return hbox;
+        Button dataBtn = new Button("Data Editor");
+        dataBtn.setPrefSize(100, 20);
+        dataBtn.getStyleClass().add("blue");
+
+        Button searchBtn = new Button("Search");
+        searchBtn.setPrefSize(100, 20);
+        searchBtn.getStyleClass().add("blue");
+
+        hbox.getChildren().addAll(activityBtn, dataBtn, searchBtn);
+
+        return hbox;
     }
-    
+
     public HBox createHBox() {
-    HBox hbox = new HBox();
-    
-    Label logo = new Label("DASH");
-    logo.getStyleClass().add("logo");
-    logo.setFont(new Font("Arial Black", 30));
-    
-    //Added to space out the logo from the login/logout
-    HBox logoBox = new HBox();
-    logoBox.setAlignment(Pos.CENTER_LEFT);
-    HBox.setHgrow(logoBox, Priority.ALWAYS);
-    
-    logoBox.getChildren().add(logo);
-    
-    hbox.getChildren().addAll(logoBox);
-    
-    hbox.setAlignment(Pos.CENTER_RIGHT);
-    hbox.setPadding(new Insets(15, 12, 15, 12));
-    hbox.setSpacing(10);
+        HBox hbox = new HBox();
 
-    
-    Button homeBtn = new Button("Home");
-    homeBtn.setPrefSize(60, 20);
-homeBtn.getStyleClass().add("blue");
+        Label logo = new Label("DASH");
+        logo.getStyleClass().add("logo");
+        logo.setFont(new Font("Arial Black", 30));
 
-    homeBtn.setOnAction((ActionEvent e) -> {
-        action = "";
-            refresh();
-        });
-    
-    hbox.getChildren().add(homeBtn);
-    
-    if (ProfileManager.isLoggedIn()) {
-        Button buttonCurrent = new Button("Logout");
-    buttonCurrent.setPrefSize(100, 20);
-buttonCurrent.getStyleClass().add("blue");
+        //Added to space out the logo from the login/logout
+        HBox logoBox = new HBox();
+        logoBox.setAlignment(Pos.CENTER_LEFT);
+        HBox.setHgrow(logoBox, Priority.ALWAYS);
 
-    buttonCurrent.setOnAction((ActionEvent e) -> {
-        profile = null;
-       
-            alert("Success", "You've been logged out!");
+        logoBox.getChildren().add(logo);
+
+        hbox.getChildren().addAll(logoBox);
+
+        hbox.setAlignment(Pos.CENTER_RIGHT);
+        hbox.setPadding(new Insets(15, 12, 15, 12));
+        hbox.setSpacing(10);
+
+
+        Button homeBtn = new Button("Home");
+        homeBtn.setPrefSize(60, 20);
+        homeBtn.getStyleClass().add("blue");
+
+        homeBtn.setOnAction((ActionEvent e) -> {
+            action = "";
             refresh();
         });
-    
-    hbox.getChildren().addAll(buttonCurrent);
-    } else {
-        Button buttonCurrent = new Button("Login");
-    buttonCurrent.setPrefSize(100, 20);
-    buttonCurrent.getStyleClass().add("blue");
-    
-    buttonCurrent.setOnAction((ActionEvent e) -> {
-        action = "login";
-            refresh();
-        });
-    
-    Button buttonProjected = new Button("Register");
-    buttonProjected.setPrefSize(100, 20);
-    buttonProjected.getStyleClass().add("blue");
-    
-    buttonProjected.setOnAction((ActionEvent e) -> {
-        action = "register";
-            refresh();
-        });
-    
-    hbox.getChildren().addAll(buttonCurrent, buttonProjected);
+
+        hbox.getChildren().add(homeBtn);
+
+        if (ProfileManager.isLoggedIn()) {
+            Button buttonCurrent = new Button("Logout");
+            buttonCurrent.setPrefSize(100, 20);
+            buttonCurrent.getStyleClass().add("blue");
+
+            buttonCurrent.setOnAction((ActionEvent e) -> {
+                profile = null;
+
+                alert("Success", "You've been logged out!");
+                refresh();
+            });
+
+            hbox.getChildren().addAll(buttonCurrent);
+        } else {
+            Button buttonCurrent = new Button("Login");
+            buttonCurrent.setPrefSize(100, 20);
+            buttonCurrent.getStyleClass().add("blue");
+
+            buttonCurrent.setOnAction((ActionEvent e) -> {
+                action = "login";
+                refresh();
+            });
+
+            Button buttonProjected = new Button("Register");
+            buttonProjected.setPrefSize(100, 20);
+            buttonProjected.getStyleClass().add("blue");
+
+            buttonProjected.setOnAction((ActionEvent e) -> {
+                action = "register";
+                refresh();
+            });
+
+            hbox.getChildren().addAll(buttonCurrent, buttonProjected);
+        }
+
+
+        return hbox;
     }
-    
-
-    return hbox;
-}
     public GridPane createLoginPane() {
         GridPane grid = new GridPane();
-    grid.setHgap(10);
-    grid.setVgap(12);
-    grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(12);
+        grid.setAlignment(Pos.CENTER);
 
-    HBox hbButtons = new HBox();
-    hbButtons.setSpacing(8.0);
-    
-    
+        HBox hbButtons = new HBox();
+        hbButtons.setSpacing(8.0);
 
 
 
-ColumnConstraints column1 = new ColumnConstraints();
-column1.setHalignment(HPos.RIGHT);
-grid.getColumnConstraints().add(column1); 
-
-ColumnConstraints column2 = new ColumnConstraints();
-column2.setHalignment(HPos.LEFT);
-grid.getColumnConstraints().add(column2); 
 
 
-    Button btnSubmit = new Button("Submit");
-    Button btnClear = new Button("Clear");
-    Button btnExit = new Button("Exit");
+        ColumnConstraints column1 = new ColumnConstraints();
+        column1.setHalignment(HPos.RIGHT);
+        grid.getColumnConstraints().add(column1);
 
-    Label lblName = new Label("User name:");
-    TextField tfName = new TextField();
-    Label lblPwd = new Label("Password:");
-    PasswordField pfPwd = new PasswordField();
+        ColumnConstraints column2 = new ColumnConstraints();
+        column2.setHalignment(HPos.LEFT);
+        grid.getColumnConstraints().add(column2);
 
-    hbButtons.getChildren().addAll(btnSubmit, btnClear, btnExit);
-    grid.add(lblName, 0, 0);
-    grid.add(tfName, 1, 0);
-    grid.add(lblPwd, 0, 1);
-    grid.add(pfPwd, 1, 1);
-    grid.add(hbButtons, 0, 2, 2, 3);
-    
-    btnSubmit.setOnAction((ActionEvent e) -> {
-        profile = Login.login(tfName.getText(), pfPwd.getText());
-        if (!ProfileManager.isLoggedIn()){
-            alert("Error", "Sorry, there was an issue logging you in!");
-        } else {
-            alert("Success", "You have been logged in!");
-            refresh();
-        }
+
+        Button btnSubmit = new Button("Submit");
+        Button btnClear = new Button("Clear");
+        Button btnExit = new Button("Exit");
+
+        Label lblName = new Label("User name:");
+        TextField tfName = new TextField();
+        Label lblPwd = new Label("Password:");
+        PasswordField pfPwd = new PasswordField();
+
+        hbButtons.getChildren().addAll(btnSubmit, btnClear, btnExit);
+        grid.add(lblName, 0, 0);
+        grid.add(tfName, 1, 0);
+        grid.add(lblPwd, 0, 1);
+        grid.add(pfPwd, 1, 1);
+        grid.add(hbButtons, 0, 2, 2, 3);
+
+        btnSubmit.setOnAction((ActionEvent e) -> {
+            profile = Login.login(tfName.getText(), pfPwd.getText());
+            if (!ProfileManager.isLoggedIn()) {
+                alert("Error", "Sorry, there was an issue logging you in!");
+            } else {
+                alert("Success", "You have been logged in!");
+                refresh();
+            }
         });
-    
-    
-    btnClear.setOnAction(new EventHandler<ActionEvent>() {
-    @Override public void handle(ActionEvent e) {
-        tfName.setText("");
-        pfPwd.setText("");
-       
-    }
-});
-    
-    return grid;
-    }
-    
-    
-     public GridPane createRegisterPane() {
-        GridPane grid = new GridPane();
-    grid.setHgap(10);
-    grid.setVgap(12);
-    grid.setAlignment(Pos.CENTER);
-
-    HBox hbButtons = new HBox();
-    hbButtons.setSpacing(8.0);
-    
-    
 
 
+        btnClear.setOnAction(new EventHandler < ActionEvent > () {
+            @Override public void handle(ActionEvent e) {
+                tfName.setText("");
+                pfPwd.setText("");
 
-ColumnConstraints column1 = new ColumnConstraints();
-column1.setHalignment(HPos.RIGHT);
-grid.getColumnConstraints().add(column1); 
-
-ColumnConstraints column2 = new ColumnConstraints();
-column2.setHalignment(HPos.LEFT);
-grid.getColumnConstraints().add(column2); 
-
-
-    Button btnSubmit = new Button("Register");
-    Button btnClear = new Button("Clear");
-    Button btnExit = new Button("Exit");
-
-    Label lblName = new Label("User name:");
-    TextField tfName = new TextField();
-    
-    Label lblPwd = new Label("Password:");
-    PasswordField pfPwd = new PasswordField();
-    
-    Label confirmLabel = new Label("Confirm:");
-    PasswordField confirmField = new PasswordField();
-
-    hbButtons.getChildren().addAll(btnSubmit, btnClear, btnExit);
-    grid.add(lblName, 0, 0);
-    grid.add(tfName, 1, 0);
-    grid.add(lblPwd, 0, 1);
-    grid.add(pfPwd, 1, 1);
-    
-    grid.add(confirmLabel, 0, 2);
-    grid.add(confirmField, 1, 2);
-    
-    grid.add(hbButtons, 0, 3, 2, 3);
-    
-    btnSubmit.setOnAction((ActionEvent e) -> {
-        boolean registered = Register.register(tfName.getText(), pfPwd.getText(), confirmField.getText());
-        if (!registered){
-            alert("Error", "Sorry, there was an issue registering you!");
-        } else {
-            alert("Success", "You've been registered, now login!");
-            action = "login";
-            refresh();
-        }
+            }
         });
-    
-    
-    btnClear.setOnAction(new EventHandler<ActionEvent>() {
-    @Override public void handle(ActionEvent e) {
-        tfName.setText("");
-        pfPwd.setText("");
-       
-    }
-});
-    
-    return grid;
-    }
-    
-    
-        public GridPane createMainPane() {
-        GridPane grid = new GridPane();
-    grid.setHgap(10);
-    grid.setVgap(12);
-    grid.setAlignment(Pos.CENTER);
 
-    HBox hbButtons = new HBox();
-    hbButtons.setSpacing(10.0);
-    
-    try {
-    grid.getChildren().add(ExampleGraph.createGraph());
-    } catch (Exception e) {
-        grid.getChildren().add(new Label("Sorry, there was a problem creating the graph!"));
+        return grid;
     }
-    
 
-    return grid;
-    }
-        
-        public GridPane createDavidGraph() {
+
+    public GridPane createRegisterPane() {
         GridPane grid = new GridPane();
-    grid.setHgap(10);
-    grid.setVgap(12);
-    grid.setAlignment(Pos.CENTER);
-    HBox hbButtons = new HBox();
-    hbButtons.setSpacing(10.0);
-    
-    try {
-    grid.getChildren().add(W1690566_Graph.createGraph());
-    } catch (Exception e) {
-        grid.getChildren().add(new Label("Sorry, there was a problem creating the graph!"));
+        grid.setHgap(10);
+        grid.setVgap(12);
+        grid.setAlignment(Pos.CENTER);
+
+        HBox hbButtons = new HBox();
+        hbButtons.setSpacing(8.0);
+
+
+
+
+
+        ColumnConstraints column1 = new ColumnConstraints();
+        column1.setHalignment(HPos.RIGHT);
+        grid.getColumnConstraints().add(column1);
+
+        ColumnConstraints column2 = new ColumnConstraints();
+        column2.setHalignment(HPos.LEFT);
+        grid.getColumnConstraints().add(column2);
+
+
+        Button btnSubmit = new Button("Register");
+        Button btnClear = new Button("Clear");
+        Button btnExit = new Button("Exit");
+
+        Label lblName = new Label("User name:");
+        TextField tfName = new TextField();
+
+        Label lblPwd = new Label("Password:");
+        PasswordField pfPwd = new PasswordField();
+
+        Label confirmLabel = new Label("Confirm:");
+        PasswordField confirmField = new PasswordField();
+
+        hbButtons.getChildren().addAll(btnSubmit, btnClear, btnExit);
+        grid.add(lblName, 0, 0);
+        grid.add(tfName, 1, 0);
+        grid.add(lblPwd, 0, 1);
+        grid.add(pfPwd, 1, 1);
+
+        grid.add(confirmLabel, 0, 2);
+        grid.add(confirmField, 1, 2);
+
+        grid.add(hbButtons, 0, 3, 2, 3);
+
+        btnSubmit.setOnAction((ActionEvent e) -> {
+            boolean registered = Register.register(tfName.getText(), pfPwd.getText(), confirmField.getText());
+            if (!registered) {
+                alert("Error", "Sorry, there was an issue registering you!");
+            } else {
+                alert("Success", "You've been registered, now login!");
+                action = "login";
+                refresh();
+            }
+        });
+
+
+        btnClear.setOnAction(new EventHandler < ActionEvent > () {
+            @Override public void handle(ActionEvent e) {
+                tfName.setText("");
+                pfPwd.setText("");
+
+            }
+        });
+
+        return grid;
     }
-    return grid;
-    }
-        
-        public GridPane createKhaloodGraph() {
+
+
+    public GridPane createMainPane() {
         GridPane grid = new GridPane();
-    grid.setHgap(10);
-    grid.setVgap(12);
-    grid.setAlignment(Pos.CENTER);
-    HBox hbButtons = new HBox();
-    hbButtons.setSpacing(10.0);
-    
-    try {
-    grid.getChildren().add(W1687385_Group1.createGraph());
-    } catch (Exception e) {
-        grid.getChildren().add(new Label("Sorry, there was a problem creating the graph!"));
+        grid.setHgap(10);
+        grid.setVgap(12);
+        grid.setAlignment(Pos.CENTER);
+
+        HBox hbButtons = new HBox();
+        hbButtons.setSpacing(10.0);
+
+        try {
+            grid.getChildren().add(ExampleGraph.createGraph());
+        } catch (Exception e) {
+            grid.getChildren().add(new Label("Sorry, there was a problem creating the graph!"));
+        }
+
+
+        return grid;
     }
-    return grid;
-    }
-        
-        public GridPane createGayatriGraph() {
+
+    public GridPane createDavidGraph() {
         GridPane grid = new GridPane();
-    grid.setHgap(10);
-    grid.setVgap(12);
-    grid.setAlignment(Pos.CENTER);
-    HBox hbButtons = new HBox();
-    hbButtons.setSpacing(10.0);
-    
-    try {
-    grid.getChildren().add(W1648585_Graph.createGraph());
-    } catch (Exception e) {
-        grid.getChildren().add(new Label("Sorry, there was a problem creating the graph!"));
+        grid.setHgap(10);
+        grid.setVgap(12);
+        grid.setAlignment(Pos.CENTER);
+        HBox hbButtons = new HBox();
+        hbButtons.setSpacing(10.0);
+
+        try {
+            grid.getChildren().add(W1690566_Graph.createGraph());
+        } catch (Exception e) {
+            grid.getChildren().add(new Label("Sorry, there was a problem creating the graph!"));
+        }
+        return grid;
     }
-    return grid;
-    }
-        
-                public GridPane createAtiyaGraph() {
+
+    public GridPane createKhaloodGraph() {
         GridPane grid = new GridPane();
-    grid.setHgap(10);
-    grid.setVgap(12);
-    grid.setAlignment(Pos.CENTER);
-    HBox hbButtons = new HBox();
-    hbButtons.setSpacing(10.0);
-    
-    try {
-    grid.getChildren().add(W1690091_Graph.createGraph());
-    } catch (Exception e) {
-        grid.getChildren().add(new Label("Sorry, there was a problem creating the graph!"));
+        grid.setHgap(10);
+        grid.setVgap(12);
+        grid.setAlignment(Pos.CENTER);
+        HBox hbButtons = new HBox();
+        hbButtons.setSpacing(10.0);
+
+        try {
+            grid.getChildren().add(W1687385_Group1.createGraph());
+        } catch (Exception e) {
+            grid.getChildren().add(new Label("Sorry, there was a problem creating the graph!"));
+        }
+        return grid;
     }
-    return grid;
+
+    public GridPane createGayatriGraph() {
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(12);
+        grid.setAlignment(Pos.CENTER);
+        HBox hbButtons = new HBox();
+        hbButtons.setSpacing(10.0);
+
+        try {
+            grid.getChildren().add(W1648585_Graph.createGraph());
+        } catch (Exception e) {
+            grid.getChildren().add(new Label("Sorry, there was a problem creating the graph!"));
+        }
+        return grid;
     }
-                
-    
+
+    public GridPane createAtiyaGraph() {
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(12);
+        grid.setAlignment(Pos.CENTER);
+        HBox hbButtons = new HBox();
+        hbButtons.setSpacing(10.0);
+
+        try {
+            grid.getChildren().add(W1690091_Graph.createGraph());
+        } catch (Exception e) {
+            grid.getChildren().add(new Label("Sorry, there was a problem creating the graph!"));
+        }
+        return grid;
+    }
+
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         launch(args);
     }
-    
+
     public void alert(String title, String description) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-    alert.setTitle(title);
-    alert.setHeaderText(title);
-    alert.setContentText(description);
-    alert.showAndWait();
+        alert.setTitle(title);
+        alert.setHeaderText(title);
+        alert.setContentText(description);
+        alert.showAndWait();
     }
-    
-    
+
+
 }

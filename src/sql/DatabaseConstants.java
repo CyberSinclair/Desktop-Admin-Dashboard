@@ -11,6 +11,7 @@ package sql;
  */
 public class DatabaseConstants {
     
+    //This stores all the constants of the database connection
     protected static final String DATABASE_DRIVER = "com.mysql.jdbc.Driver";
     protected static final String DATABASE_URL = "localhost:3306";
     protected static final String DATABASE_NAME = "dashboard_db";

@@ -17,6 +17,8 @@ import java.util.Properties;
  *
  * @author londo
  */
+
+//This class can be used to create a manager object, handling all connections and queries.
 public class DatabaseManager {
     
     public Connection connection;
@@ -24,6 +26,7 @@ public class DatabaseManager {
     public DatabaseManager() {
     }
     
+    //Method created to connect with user definied params
     public void connectWithCredentials(String url, String name, String user, String pass) {
         if (connection == null) {
             try {
@@ -37,7 +40,7 @@ public class DatabaseManager {
         }
     }
     
-    // connect database
+    // connect to database with constant credentials
     public void connect() {
         if (connection == null) {
             try {
@@ -63,12 +66,14 @@ public class DatabaseManager {
         }
     }
     
+    //Create a query with a string statement
     public ResultSet query(String statement) throws SQLException {
         Statement stmt = connection.createStatement();
         ResultSet resultSet = stmt.executeQuery(statement);
         return resultSet;
     }
     
+    //Create a query with a prepared statement
     public ResultSet query(PreparedStatement statement) throws SQLException {
         ResultSet resultSet = statement.executeQuery();
         return resultSet;

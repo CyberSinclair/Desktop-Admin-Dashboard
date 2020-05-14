@@ -20,13 +20,18 @@ import java.util.logging.Logger;
 public class Login {
     
     
+    //Returns a profile object, upon login with user and pass
+    //null returned if invalid credentials or error
     public static Profile login(String username, String password) {
+        
+        //Connect to db
         DatabaseManager manager = new DatabaseManager();
         manager.connect();
         System.out.println("Connected");
         Profile profile = null;
             try {
                 
+                //Find user row with credentials
                 String query = "SELECT * FROM users WHERE email=? AND password=?";
                 PreparedStatement statement = manager.connection.prepareStatement(query);
                 statement.setString(1, username);
@@ -36,6 +41,7 @@ public class Login {
 
                 ResultSet info = manager.query(statement);
 
+                //While result has row, declare profile found and create object
                 while (info.next()) {
                     profile = new Profile(info.getInt("id"), info.getString("email"), info.getString("userType"));
                     System.out.println("Found account");
